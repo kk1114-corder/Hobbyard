@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+body {
+  background-color: #f8fafc;
+  /* slate-50 */
+  color: #0f172a;
+  /* slate-900 */
+}
+
+@utility writing-vertical-rl {
+  writing-mode: vertical-rl;
+}
