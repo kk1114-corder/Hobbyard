@@ -23,7 +23,7 @@ export function Layout({ children, onOpenAddModal }: LayoutProps) {
     ];
 
     return (
-        <div className="min-h-screen font-sans bg-black text-slate-100 transition-colors duration-500">
+        <div className="min-h-screen font-sans bg-black text-slate-100 transition-colors duration-500 overflow-x-hidden">
             {/* Desktop Sidebar Navigation */}
             <aside className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-black border-r border-white/10 flex-col z-50 transition-all duration-300">
                 <div className="p-6 flex items-center gap-3">
@@ -84,7 +84,7 @@ export function Layout({ children, onOpenAddModal }: LayoutProps) {
             </aside>
 
             {/* Mobile Bottom Navigation */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 safe-area-bottom">
+            <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-black/95 backdrop-blur-xl border-t border-white/10" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
                 <div className="flex items-center justify-around px-2 py-2">
                     {navItems.map((item) => {
                         const isActive = path.startsWith(item.path);
