@@ -84,7 +84,7 @@ export function Bookshelf({ items, onDelete, onUpdateStatus, onEdit }: Bookshelf
                 <div className="relative z-10">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
-                            <h2 className="text-3xl font-bold tracking-tight text-slate-800 font-sans">MY LIBRARY</h2>
+                            <h2 className="text-xl md:text-3xl font-bold tracking-tight text-slate-800 font-sans">MY LIBRARY</h2>
                             <p className="mt-2 text-slate-500 font-medium tracking-wide">
                                 {items.length} BOOKS
                             </p>

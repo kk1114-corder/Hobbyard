@@ -13,7 +13,7 @@ export function VideoGallery({ items, onDelete }: VideoGalleryProps) {
             <div className="relative overflow-hidden rounded-3xl bg-white p-8 text-slate-900 shadow-xl border border-slate-200">
                 <div className="absolute top-0 right-0 -mt-10 -mr-10 h-64 w-64 rounded-full bg-red-500/10 blur-3xl"></div>
                 <div className="relative z-10">
-                    <h2 className="text-3xl font-black tracking-tight font-display italic text-red-600">YOUTUBE GALLERY</h2>
+                    <h2 className="text-xl md:text-3xl font-black tracking-tight font-display italic text-red-600">YOUTUBE GALLERY</h2>
                     <p className="mt-2 text-slate-500 font-medium tracking-wide">
                         {items.length} VIDEOS SAVED
                     </p>

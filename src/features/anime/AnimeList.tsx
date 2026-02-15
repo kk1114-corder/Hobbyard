@@ -89,7 +89,7 @@ export function AnimeList({ items, onUpdateStatus, onDelete, onEdit }: AnimeList
                 <div className="relative z-10">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
-                            <h2 className="text-3xl font-black tracking-tight font-display italic">ANIME COLLECTION</h2>
+                            <h2 className="text-xl md:text-3xl font-black tracking-tight font-display italic">ANIME COLLECTION</h2>
                             <p className="mt-2 text-fuchsia-100 font-medium tracking-wide">
                                 {items.length} TITLES TRACKED
                             </p>

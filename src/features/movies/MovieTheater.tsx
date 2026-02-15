@@ -80,7 +80,7 @@ export function MovieTheater({ items, onUpdateStatus, onDelete, onEdit }: MovieT
                 <div className="relative z-10">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
-                            <h2 className="text-4xl font-black tracking-tighter font-display italic text-red-600 drop-shadow-sm">MOVIE COLLECTION</h2>
+                            <h2 className="text-2xl md:text-4xl font-black tracking-tighter font-display italic text-red-600 drop-shadow-sm">MOVIE COLLECTION</h2>
                             <p className="mt-2 text-neutral-400 font-medium tracking-wide">
                                 {items.length} TITLES
                             </p>

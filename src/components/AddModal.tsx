@@ -270,9 +270,9 @@ export const AddModal: React.FC<AddModalProps> = ({ isOpen, onClose, onAdd, onUp
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl max-h-[90vh] overflow-y-auto">
-                <div className="flex justify-between items-center mb-6">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center md:p-4 z-50">
+            <div className="bg-white w-full h-[90vh] md:h-auto rounded-t-2xl md:rounded-2xl md:max-w-md p-5 md:p-6 shadow-xl md:max-h-[90vh] overflow-y-auto">
+                <div className="flex justify-between items-center mb-4 md:mb-6">
                     <h2 className="text-2xl font-bold text-slate-800">
                         {initialData ? '編集' :
                             category === 'movie' ? '映画を追加' : category === 'book' ? '本を追加' : category === 'anime' ? 'アニメを追加' : '動画を追加'}
