@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star, Trash2, ExternalLink } from 'lucide-react';
-import type { HobbyItem } from '../types';
+import type { HobbyItem } from '../../types';
 
 interface ItemCardProps {
     item: HobbyItem;

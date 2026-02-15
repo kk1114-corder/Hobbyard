@@ -1,26 +1,23 @@
 import { useState } from 'react';
-import { Plus, Play, Check, Star, MonitorPlay, Calendar, Tag } from 'lucide-react';
+import { Play, Check, MonitorPlay, Calendar, Trash2, Pencil, X } from 'lucide-react';
 import type { HobbyItem } from '../../types';
 import { clsx } from 'clsx';
+import { StarRating } from '../../components/ui/StarRating';
+import { FilterBar, type SortOption } from '../../components/ui/FilterBar';
 
 interface AnimeListProps {
     items: HobbyItem[];
     onUpdateStatus: (id: string, status: 'want_to_watch' | 'watching' | 'watched', rating?: number) => void;
+    onDelete: (id: string) => void;
+    onEdit?: (item: HobbyItem) => void;
 }
 
-export function AnimeList({ items, onUpdateStatus }: AnimeListProps) {
+export function AnimeList({ items, onUpdateStatus, onDelete, onEdit }: AnimeListProps) {
     const [activeTab, setActiveTab] = useState<'watching' | 'want_to_watch' | 'watched'>('watching');
-    const [spoilerVisible, setSpoilerVisible] = useState<Record<string, boolean>>({});
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedTag, setSelectedTag] = useState<string | null>(null);
+    const [sortOption, setSortOption] = useState<SortOption>('date_desc');
 
-    const watching = items.filter(i => i.status === 'watching');
-    const wantToWatch = items.filter(i => i.status === 'want_to_watch' || !i.status);
-    const watched = items.filter(i => i.status === 'watched');
-
-    const displayedItems = activeTab === 'watching' ? watching : activeTab === 'want_to_watch' ? wantToWatch : watched;
-
-    const toggleSpoiler = (id: string) => {
-        setSpoilerVisible(prev => ({ ...prev, [id]: !prev[id] }));
-    };
 
     const getTabLabel = (tab: string) => {
         switch (tab) {
@@ -31,64 +28,193 @@ export function AnimeList({ items, onUpdateStatus }: AnimeListProps) {
         }
     };
 
+    // Calculate Popular Tags
+    const allTags = items.flatMap(item => item.tags || []);
+    const tagCounts = allTags.reduce((acc, tag) => {
+        acc[tag] = (acc[tag] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
+    const popularTags = Object.entries(tagCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 8)
+        .map(([tag]) => tag);
+
+    // Filter & Sort Logic
+    const filteredItems = items
+        .filter(item => {
+            // Tab Filter
+            if (activeTab === 'watching' && item.status !== 'watching') return false;
+            if (activeTab === 'want_to_watch' && item.status !== 'want_to_watch' && item.status) return false;
+            if (activeTab === 'watched' && item.status !== 'watched') return false;
+
+            // Tag Filter
+            if (selectedTag && !item.tags?.includes(selectedTag)) return false;
+
+            // Search Filter
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                const matchTitle = item.title.toLowerCase().includes(query);
+                const matchMemo = item.memo?.toLowerCase().includes(query);
+                const matchTags = item.tags?.some(tag => tag.toLowerCase().includes(query));
+                if (!matchTitle && !matchMemo && !matchTags) return false;
+            }
+            return true;
+        })
+        .sort((a, b) => {
+            switch (sortOption) {
+                case 'date_desc':
+                    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+                case 'date_asc':
+                    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+                case 'rating_desc':
+                    return (b.rating || 0) - (a.rating || 0);
+                case 'rating_asc':
+                    return (a.rating || 0) - (b.rating || 0);
+                case 'title_asc':
+                    return a.title.localeCompare(b.title);
+                default:
+                    return 0;
+            }
+        });
+
+    const handleTagClick = (tag: string) => {
+        setSelectedTag(prev => prev === tag ? null : tag);
+    };
+
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Anime Stats / Header */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-violet-600 to-fuchsia-600 p-8 text-white shadow-2xl shadow-fuchsia-500/20">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-violet-600 to-fuchsia-600 p-8 text-white shadow-2xl shadow-fuchsia-500/20 transition-all hover:shadow-fuchsia-500/30">
                 <div className="absolute top-0 right-0 -mt-10 -mr-10 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
                 <div className="relative z-10">
-                    <h2 className="text-3xl font-black tracking-tight font-display italic">ANIME COLLECTION</h2>
-                    <p className="mt-2 text-fuchsia-100 font-medium tracking-wide">
-                        {items.length} TITLES TRACKED
-                    </p>
-                    <div className="flex gap-4 mt-6">
-                        <div className="bg-black/20 backdrop-blur-md rounded-xl p-3 px-5 border border-white/10">
-                            <span className="block text-2xl font-bold">{watching.length}</span>
-                            <span className="text-xs font-bold uppercase tracking-wider opacity-70">視聴中</span>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div>
+                            <h2 className="text-3xl font-black tracking-tight font-display italic">ANIME COLLECTION</h2>
+                            <p className="mt-2 text-fuchsia-100 font-medium tracking-wide">
+                                {items.length} TITLES TRACKED
+                            </p>
                         </div>
-                        <div className="bg-black/20 backdrop-blur-md rounded-xl p-3 px-5 border border-white/10">
-                            <span className="block text-2xl font-bold">{wantToWatch.length}</span>
-                            <span className="text-xs font-bold uppercase tracking-wider opacity-70">見たい</span>
-                        </div>
-                        <div className="bg-black/20 backdrop-blur-md rounded-xl p-3 px-5 border border-white/10">
-                            <span className="block text-2xl font-bold">{watched.length}</span>
-                            <span className="text-xs font-bold uppercase tracking-wider opacity-70">視聴済み</span>
-                        </div>
+
+                        {/* Popular Tags Cloud */}
+                        {popularTags.length > 0 && (
+                            <div className="flex flex-wrap gap-2 max-w-md justify-start md:justify-end">
+                                {popularTags.map(tag => (
+                                    <button
+                                        key={tag}
+                                        onClick={() => handleTagClick(tag)}
+                                        className={clsx(
+                                            "text-xs px-2.5 py-1 rounded-full border transition-all duration-300",
+                                            selectedTag === tag
+                                                ? "bg-white text-fuchsia-600 border-white shadow-md shadow-black/20"
+                                                : "bg-white/10 text-white/90 border-white/20 hover:bg-white hover:text-fuchsia-600"
+                                        )}
+                                    >
+                                        #{tag}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
 
-            {/* Pop Tabs */}
-            <div className="flex gap-2 p-1 bg-white/5 rounded-2xl w-fit backdrop-blur-sm border border-white/10">
-                {(['watching', 'want_to_watch', 'watched'] as const).map((tab) => (
-                    <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={clsx(
-                            "px-6 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300",
-                            activeTab === tab
-                                ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-fuchsia-500/25 scale-105"
-                                : "text-slate-400 hover:text-white hover:bg-white/5"
-                        )}
-                    >
-                        {getTabLabel(tab)}
-                    </button>
-                ))}
+            {/* Controls */}
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                {/* Pop Tabs */}
+                <div className="flex gap-2 p-1 bg-white/5 rounded-2xl w-full sm:w-fit backdrop-blur-sm border border-white/10 overflow-x-auto">
+                    {(['watching', 'want_to_watch', 'watched'] as const).map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={clsx(
+                                "flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap",
+                                activeTab === tab
+                                    ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-fuchsia-500/25 scale-105"
+                                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                            )}
+                        >
+                            {getTabLabel(tab)}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto items-center">
+                    {/* Active Tag Indicator */}
+                    {selectedTag && (
+                        <div className="flex items-center gap-2 bg-fuchsia-500/10 text-fuchsia-300 px-4 py-2 rounded-xl border border-fuchsia-500/20 text-sm font-medium animate-in fade-in slide-in-from-right-4">
+                            <span>#{selectedTag}</span>
+                            <button
+                                onClick={() => setSelectedTag(null)}
+                                className="hover:bg-fuchsia-500/20 p-0.5 rounded-full transition-colors"
+                            >
+                                <X size={14} className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Filter Bar */}
+                    <FilterBar
+                        searchQuery={searchQuery}
+                        onSearchChange={setSearchQuery}
+                        sortOption={sortOption}
+                        onSortChange={setSortOption}
+                        className="w-full sm:w-auto mb-0"
+                        variant="dark"
+                    />
+                </div>
             </div>
 
             {/* Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {displayedItems.length === 0 ? (
+                {filteredItems.length === 0 ? (
                     <div className="col-span-full py-20 text-center border-2 border-dashed border-white/10 rounded-3xl">
                         <MonitorPlay size={48} className="mx-auto text-white/20 mb-4" />
-                        <p className="text-white/40 font-medium">リストにアニメがありません。</p>
+                        <p className="text-white/40 font-medium">
+                            {selectedTag ? `タグ #${selectedTag} のアニメはありません。` : 'リストにアニメがありません。'}
+                        </p>
+                        {selectedTag && (
+                            <button
+                                onClick={() => setSelectedTag(null)}
+                                className="mt-4 text-fuchsia-400 hover:underline text-sm font-medium"
+                            >
+                                フィルターを解除
+                            </button>
+                        )}
                     </div>
                 ) : (
-                    displayedItems.map((anime) => (
+                    filteredItems.map((anime) => (
                         <div
                             key={anime.id}
                             className="group relative aspect-[2/3] rounded-2xl overflow-hidden bg-slate-900 border border-white/5 shadow-xl transition-all duration-500 hover:scale-[1.03] hover:shadow-fuchsia-500/10 hover:border-fuchsia-500/50"
                         >
+                            {/* Edit Button (Visible on Hover) */}
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    onEdit?.(anime);
+                                }}
+                                className="absolute top-2 right-2 z-20 p-2 bg-black/50 text-white/50 hover:bg-indigo-600 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm delay-75"
+                                title="編集"
+                            >
+                                <Pencil size={16} />
+                            </button>
+
+                            {/* Delete Button (Visible on Hover) */}
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    if (window.confirm('本当に削除しますか？')) {
+                                        onDelete(anime.id);
+                                    }
+                                }}
+                                className="absolute top-2 left-2 z-20 p-2 bg-black/50 text-white/50 hover:bg-red-600 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
+                                title="削除"
+                            >
+                                <Trash2 size={16} />
+                            </button>
+
                             <img
                                 src={anime.coverUrl || 'https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=1000&auto=format&fit=crop'}
                                 alt={anime.title}
@@ -99,7 +225,7 @@ export function AnimeList({ items, onUpdateStatus }: AnimeListProps) {
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-90" />
 
                             {/* Status Badge */}
-                            <div className="absolute top-3 right-3">
+                            <div className="absolute top-3 right-3 pointer-events-none">
                                 {anime.status === 'watching' && <span className="px-2 py-1 bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-widest rounded shadow-lg shadow-emerald-500/40">視聴中</span>}
                                 {anime.status === 'want_to_watch' && <span className="px-2 py-1 bg-blue-500 text-white text-[10px] font-bold uppercase tracking-widest rounded shadow-lg shadow-blue-500/40">見たい</span>}
                                 {anime.status === 'watched' && <span className="px-2 py-1 bg-fuchsia-500 text-white text-[10px] font-bold uppercase tracking-widest rounded shadow-lg shadow-fuchsia-500/40">視聴済み</span>}
@@ -112,15 +238,9 @@ export function AnimeList({ items, onUpdateStatus }: AnimeListProps) {
                                 </h3>
 
                                 {/* Rating Stars */}
-                                {anime.rating && (
-                                    <div className="flex gap-0.5 mb-2">
-                                        {[...Array(5)].map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                size={12}
-                                                className={i < anime.rating! ? "fill-yellow-400 text-yellow-400" : "fill-white/20 text-white/20"}
-                                            />
-                                        ))}
+                                {anime.rating && anime.status === 'watched' && (
+                                    <div className="mb-2">
+                                        <StarRating rating={anime.rating} readonly size={14} />
                                     </div>
                                 )}
 
@@ -128,9 +248,21 @@ export function AnimeList({ items, onUpdateStatus }: AnimeListProps) {
                                 {anime.tags && anime.tags.length > 0 && (
                                     <div className="flex flex-wrap gap-1 mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
                                         {anime.tags.slice(0, 3).map(tag => (
-                                            <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/80 border border-white/10 backdrop-blur-sm">
+                                            <button
+                                                key={tag}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleTagClick(tag);
+                                                }}
+                                                className={clsx(
+                                                    "text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm border transition-colors",
+                                                    selectedTag === tag
+                                                        ? "bg-fuchsia-500 text-white border-fuchsia-500 shadow-sm"
+                                                        : "bg-white/10 text-white/80 border-white/10 hover:bg-white/20"
+                                                )}
+                                            >
                                                 #{tag}
-                                            </span>
+                                            </button>
                                         ))}
                                     </div>
                                 )}
@@ -146,16 +278,9 @@ export function AnimeList({ items, onUpdateStatus }: AnimeListProps) {
 
                                     {anime.memo && (
                                         <div
-                                            className="text-xs text-slate-300 line-clamp-3 cursor-pointer hover:text-white transition-colors"
-                                            onClick={() => anime.spoiler && toggleSpoiler(anime.id)}
+                                            className="text-xs text-slate-300 line-clamp-3"
                                         >
-                                            {anime.spoiler && !spoilerVisible[anime.id] ? (
-                                                <span className="flex items-center gap-1 text-fuchsia-400 font-bold bg-fuchsia-400/10 px-2 py-1 rounded border border-fuchsia-400/20 w-fit">
-                                                    ⚠️ ネタバレ (クリックで表示)
-                                                </span>
-                                            ) : (
-                                                anime.memo
-                                            )}
+                                            {anime.memo}
                                         </div>
                                     )}
 
@@ -175,11 +300,6 @@ export function AnimeList({ items, onUpdateStatus }: AnimeListProps) {
                                             >
                                                 <Play size={14} /> 視聴
                                             </button>
-                                        )}
-                                        {activeTab === 'watched' && (
-                                            <div className="w-full text-center text-[10px] text-white/40 font-medium tracking-widest uppercase mt-1">
-                                                視聴済み
-                                            </div>
                                         )}
                                     </div>
                                 </div>

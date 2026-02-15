@@ -1,8 +1,7 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Film, Book, Youtube, Plus, Sprout, MonitorPlay } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 
 interface LayoutProps {
     children: ReactNode;
@@ -94,8 +93,8 @@ export function Layout({ children, onOpenAddModal }: LayoutProps) {
                     <div className="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#2a1b4e] via-[#0f0a1e] to-black opacity-100" />
                 )}
                 {activeCategory === 'book' && (
-                    <div className="fixed inset-0 pointer-events-none z-0 bg-[#f4e4bc] opacity-100 mix-blend-normal" style={{ backgroundImage: 'linear-gradient(#4a4036 1px, transparent 1px), linear-gradient(90deg, #4a4036 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
-                        <div className="absolute inset-0 bg-white/40"></div>
+                    <div className="fixed inset-0 pointer-events-none z-0 bg-[#f8fafc] opacity-100" style={{ backgroundImage: 'radial-gradient(#e2e8f0 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
+                        <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-transparent"></div>
                     </div>
                 )}
                 {activeCategory === 'youtube' && (

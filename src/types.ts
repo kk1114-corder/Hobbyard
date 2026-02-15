@@ -6,10 +6,10 @@ export interface HobbyItem {
     category: Category;
     memo?: string;
     rating?: number; // 1-5 for movies/books
-    status?: 'want_to_watch' | 'watched' | 'want_to_read' | 'reading' | 'completed'; // for books/movies
+    status?: 'want_to_watch' | 'watching' | 'watched' | 'want_to_read' | 'reading' | 'completed'; // for books/movies
     dateWatched?: string; // ISO date string
     tags?: string[];
-    spoiler?: boolean;
+
     url?: string; // for youtube/movies
     coverUrl?: string; // for books/movies
     channelName?: string; // for youtube
