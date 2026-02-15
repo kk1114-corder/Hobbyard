@@ -83,16 +83,24 @@ export function Layout({ children, onOpenAddModal }: LayoutProps) {
                 </div>
             </aside>
 
+            {/* Mobile Floating Action Button - positioned above Chrome toolbar */}
+            <button
+                onClick={onOpenAddModal}
+                className="md:hidden fixed right-4 bottom-20 z-50 w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-xl shadow-black/30 active:scale-95 transition-transform"
+            >
+                <Plus size={26} className="text-black stroke-[3]" />
+            </button>
+
             {/* Mobile Bottom Navigation */}
             <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-black/95 backdrop-blur-xl border-t border-white/10" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
-                <div className="flex items-center justify-around px-2 py-2">
+                <div className="flex items-center justify-around px-4 py-2">
                     {navItems.map((item) => {
                         const isActive = path.startsWith(item.path);
                         return (
                             <NavLink
                                 key={item.id}
                                 to={item.path}
-                                className="flex flex-col items-center gap-1 py-1.5 px-3 rounded-xl transition-all"
+                                className="flex flex-col items-center gap-1 py-1.5 px-4 rounded-xl transition-all"
                             >
                                 <item.icon
                                     size={22}
@@ -110,15 +118,6 @@ export function Layout({ children, onOpenAddModal }: LayoutProps) {
                             </NavLink>
                         );
                     })}
-                    {/* Add button in bottom nav */}
-                    <button
-                        onClick={onOpenAddModal}
-                        className="flex flex-col items-center gap-1 py-1.5 px-3"
-                    >
-                        <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-lg shadow-white/20">
-                            <Plus size={20} className="text-black stroke-[3]" />
-                        </div>
-                    </button>
                 </div>
             </nav>
 
