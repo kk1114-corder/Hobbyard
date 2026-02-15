@@ -193,7 +193,7 @@ export function MovieTheater({ items, onUpdateStatus, onDelete, onEdit }: MovieT
                                     e.stopPropagation();
                                     onEdit?.(movie);
                                 }}
-                                className="absolute top-2 right-2 z-20 p-2 bg-black/50 text-white/50 hover:bg-indigo-600 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm delay-75"
+                                className="absolute top-2 right-2 z-20 p-2 bg-black/50 text-white/50 hover:bg-indigo-600 hover:text-white rounded-full md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm delay-75"
                                 title="編集"
                             >
                                 <Pencil size={16} />
@@ -208,7 +208,7 @@ export function MovieTheater({ items, onUpdateStatus, onDelete, onEdit }: MovieT
                                         onDelete(movie.id);
                                     }
                                 }}
-                                className="absolute top-2 left-2 z-20 p-2 bg-black/50 text-white/50 hover:bg-red-600 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
+                                className="absolute top-2 left-2 z-20 p-2 bg-black/50 text-white/50 hover:bg-red-600 hover:text-white rounded-full md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
                                 title="削除"
                             >
                                 <Trash2 size={16} />
@@ -217,7 +217,7 @@ export function MovieTheater({ items, onUpdateStatus, onDelete, onEdit }: MovieT
                             <img
                                 src={movie.coverUrl || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1000&auto=format&fit=crop'}
                                 alt={movie.title}
-                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100"
+                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-100 md:opacity-60 md:group-hover:opacity-100"
                             />
 
                             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-90" />
@@ -240,7 +240,7 @@ export function MovieTheater({ items, onUpdateStatus, onDelete, onEdit }: MovieT
                                 )}
 
                                 {movie.tags && movie.tags.length > 0 ? (
-                                    <div className="flex flex-wrap gap-1 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <div className="flex flex-wrap gap-1 mb-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
                                         {movie.tags.slice(0, 3).map(tag => (
                                             <button
                                                 key={tag}
@@ -263,7 +263,7 @@ export function MovieTheater({ items, onUpdateStatus, onDelete, onEdit }: MovieT
                                     <div className="mb-2 h-6" /> /* Spacer to prevent layout shift */
                                 )}
 
-                                <div className="space-y-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pb-1">
+                                <div className="space-y-3 md:opacity-0 transition-opacity duration-300 md:group-hover:opacity-100 pb-1">
                                     {movie.dateWatched && (
                                         <div className="flex items-center gap-1.5 text-xs text-neutral-400">
                                             <Calendar size={12} />

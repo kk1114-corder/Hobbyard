@@ -223,7 +223,7 @@ export function Bookshelf({ items, onDelete, onUpdateStatus, onEdit }: Bookshelf
                                     e.stopPropagation();
                                     onEdit?.(book);
                                 }}
-                                className="absolute top-2 right-2 z-20 p-2 bg-white/90 text-slate-600 hover:bg-blue-600 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-sm border border-slate-200"
+                                className="absolute top-2 right-2 z-20 p-2 bg-white/90 text-slate-600 hover:bg-blue-600 hover:text-white rounded-full md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 shadow-sm border border-slate-200"
                                 title="編集"
                             >
                                 <Pencil size={16} />
@@ -238,7 +238,7 @@ export function Bookshelf({ items, onDelete, onUpdateStatus, onEdit }: Bookshelf
                                         onDelete(book.id);
                                     }
                                 }}
-                                className="absolute top-2 left-2 z-20 p-2 bg-white/90 text-slate-600 hover:bg-red-600 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-sm border border-slate-200"
+                                className="absolute top-2 left-2 z-20 p-2 bg-white/90 text-slate-600 hover:bg-red-600 hover:text-white rounded-full md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 shadow-sm border border-slate-200"
                                 title="削除"
                             >
                                 <Trash2 size={16} />
@@ -250,7 +250,7 @@ export function Bookshelf({ items, onDelete, onUpdateStatus, onEdit }: Bookshelf
                                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
 
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300" />
 
                             {/* Status Badge */}
                             <div className="absolute top-3 right-3 shadow-sm">
@@ -259,7 +259,7 @@ export function Bookshelf({ items, onDelete, onUpdateStatus, onEdit }: Bookshelf
                                 {book.status === 'completed' && <span className="px-2 py-1 bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-md border border-white/20">読了</span>}
                             </div>
 
-                            <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-4 transition-transform duration-300 group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
+                            <div className="absolute bottom-0 left-0 right-0 p-4 md:translate-y-4 transition-transform duration-300 md:group-hover:translate-y-0 md:opacity-0 md:group-hover:opacity-100">
                                 <h3 className="font-bold text-white text-lg leading-tight line-clamp-2 mb-1 drop-shadow-md">
                                     {book.title}
                                 </h3>

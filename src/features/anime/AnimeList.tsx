@@ -194,7 +194,7 @@ export function AnimeList({ items, onUpdateStatus, onDelete, onEdit }: AnimeList
                                     e.stopPropagation();
                                     onEdit?.(anime);
                                 }}
-                                className="absolute top-2 right-2 z-20 p-2 bg-black/50 text-white/50 hover:bg-indigo-600 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm delay-75"
+                                className="absolute top-2 right-2 z-20 p-2 bg-black/50 text-white/50 hover:bg-indigo-600 hover:text-white rounded-full md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm delay-75"
                                 title="編集"
                             >
                                 <Pencil size={16} />
@@ -209,7 +209,7 @@ export function AnimeList({ items, onUpdateStatus, onDelete, onEdit }: AnimeList
                                         onDelete(anime.id);
                                     }
                                 }}
-                                className="absolute top-2 left-2 z-20 p-2 bg-black/50 text-white/50 hover:bg-red-600 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
+                                className="absolute top-2 left-2 z-20 p-2 bg-black/50 text-white/50 hover:bg-red-600 hover:text-white rounded-full md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
                                 title="削除"
                             >
                                 <Trash2 size={16} />
@@ -222,7 +222,7 @@ export function AnimeList({ items, onUpdateStatus, onDelete, onEdit }: AnimeList
                             />
 
                             {/* Overlay Gradient */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-90" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-90 md:opacity-60 transition-opacity duration-300 md:group-hover:opacity-90" />
 
                             {/* Status Badge */}
                             <div className="absolute top-3 right-3 pointer-events-none">
@@ -246,7 +246,7 @@ export function AnimeList({ items, onUpdateStatus, onDelete, onEdit }: AnimeList
 
                                 {/* Tags */}
                                 {anime.tags && anime.tags.length > 0 && (
-                                    <div className="flex flex-wrap gap-1 mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                    <div className="flex flex-wrap gap-1 mb-3 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 delay-100">
                                         {anime.tags.slice(0, 3).map(tag => (
                                             <button
                                                 key={tag}
@@ -268,7 +268,7 @@ export function AnimeList({ items, onUpdateStatus, onDelete, onEdit }: AnimeList
                                 )}
 
                                 {/* Hover Actions / Details */}
-                                <div className="space-y-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pb-2">
+                                <div className="space-y-3 md:opacity-0 transition-opacity duration-300 md:group-hover:opacity-100 pb-2">
                                     {anime.dateWatched && (
                                         <div className="flex items-center gap-1.5 text-xs text-white/60">
                                             <Calendar size={12} />
